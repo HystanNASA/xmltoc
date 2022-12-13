@@ -1,0 +1,82 @@
+# XML input
+
+
+<System>
+    <Block>
+    <P>
+    <Port>
+    <Line>
+    Branch>
+
+<Block BlockType="Inport" Name="setpoint" SID="16"> // Inport = input port
+    <P Name="Position">[-20, 403, 10, 417]</P>
+    <Port>
+      <P Name="PortNumber">1</P> // input port 1
+      <P Name="Name">setpoint</P>
+    </Port>
+</Block>
+<Block BlockType="Inport" Name="feedback" SID="18"> // Inport = input port
+    <P Name="Position">[-20, 453, 10, 467]</P>
+    <P Name="Port">2</P>
+    <Port>
+      <P Name="PortNumber">1</P> // input port 1
+      <P Name="Name">feedback</P>
+    </Port>
+</Block>
+<Block BlockType="Sum" Name="Add1" SID="17">
+    <P Name="Ports">[2, 1]</P> // 2 input port and 1 output port
+    <P Name="Position">[105, 402, 135, 433]</P>
+    <P Name="IconShape">rectangular</P>
+    <P Name="Inputs">+-</P> // positive-negative input ports
+</Block>
+<Line>
+  <P Name="Name">setpoint</P>
+  <P Name="Src">16#out:1</P> //from <block id> = 16 out:1
+  <P Name="Dst">17#in:1</P> // to <block id> = 17 in:1
+</Line>
+<Line>
+  <P Name="Name">feedback</P>
+  <P Name="Points">[43, 0; 0, -35]</P>
+  <P Name="Src">18#out:1</P> // from <block id> = 18 out:1
+  <P Name="Dst">17#in:2</P> // to <block id> =17 in:2
+</Line>
+
+
+# C output
+
+
+struct
+{
+    double <names of every blocks>;
+} nwocg;
+
+void nwocg_generated_init() // what the hell is that?
+{
+    nwocg.UnitDelay1 = 0;
+}
+
+void nwocg_generated_step() // generated steps
+{
+    nwocg.Add1 = nwocg.setpoint - nwocg.feedback;
+    nwocg.I_gain = nwocg.Add1 * 2;
+    nwocg.Ts = nwocg.I_gain * 0.01;
+    nwocg.P_gain = nwocg.Add1 * 3;
+    nwocg.Add2 = nwocg.Ts + nwocg.UnitDelay1;
+    nwocg.Add3 = nwocg.P_gain + nwocg.Add2;
+    nwocg.UnitDelay1 = nwocg.Add2;
+}
+
+static const nwocg_ExtPort // static array of 
+    ext_ports[] =
+{
+    { "command", &nwocg.Add3, 0 },
+    { "feedback", &nwocg.feedback, 1 },
+    { "setpoint", &nwocg.setpoint, 1 },
+    { 0, 0, 0 },
+};
+
+const nwocg_ExtPort * const
+    nwocg_generated_ext_ports = ext_ports; // const pointer to const ext_ports
+
+const size_t
+    nwocg_generated_ext_ports_size = sizeof(ext_ports); // size of nwocg_ExtPort array

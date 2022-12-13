@@ -1,0 +1,9 @@
+<System>
+  <Block BlockType="Inport" Name="setpoint" SID="16">
+    <P Name="Position">[-20, 403, 10, 417]</P>
+    <Port>
+      <P Name="PortNumber">1</P>
+      <P Name="Name">setpoint</P>
+    </Port>
+  </Block>
+</System>

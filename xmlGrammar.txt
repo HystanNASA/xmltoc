@@ -1,0 +1,127 @@
+expressions:
+
+tag_struct =
+    | start_tag element end_tag
+    | start_tag tag_struct end_tag
+    | empty_tag
+
+start_tag = < tag_section >
+end_tag = </ name >
+empty_tag = < tag_section \>
+
+tag_section =
+    | name
+    | name args
+
+name = str = str_str
+args = 
+    | arg
+    | arg args
+arg =
+    | str = str_str
+    | str = str_num
+
+element =
+    | str
+    | num
+    | array
+
+array = [ arr_elements ]
+arr_elements =
+    | num
+    | num , arr_elements
+str_str = " str "
+str_num = " num "
+
+
+built-ins:
+    str = strings
+    num = number (double)
+
+
+Expression:
+ * tag_struct
+ * start_tag
+ * end_tag
+ * empty_tag
+ * tag_section
+ * name
+ * args
+ * arg
+ * element
+ * array
+ * arr_elements
+ * str_str
+ * str_num
+
+
+XML structure:
+ * System
+ * Block:
+    * BlockType:
+        * Inport
+        * Outport
+        * Sum
+        * Gain
+        * UnitDelay
+    * Name
+    * SID
+ * P: 
+    * Name:
+        * Position
+        * PortNumber
+        * Ports
+        * Port
+        * Name
+        * IconShape
+        * Inputs
+        * Gain
+        * SampleTime
+        * Src
+        * Dst
+        * Points
+ * Port
+ * Line
+ * Branch
+ * Element
+    * Array
+    * String
+    * Number
+
+
+What is a block in the parsing?
+
+Block:
+* info about Ports
+* port id ( <P Name="Port">n</P> )
+* block position
+* icon shape
+* inputs
+
+
+Block:
+ * XMLBlock blockType = XMLBlock::NO_TYPE
+ * std::string name;
+ * unsigned SID = 0
+ * std::array<int, 4> posision
+ * unsigned portId = 1
+ * unsigned numberOfInputPorts = 0
+ * unsigned numberOfOutputPorts = 0
+ * std::vector<Port> ports;
+ * std::string inputs;
+ * XMLBlockShape shape = XMLBlockShape::RECTANGULAR
+ * double gain = 1
+ * double sampleTime = -1
+ 
+Port: // output
+ * std::string name
+ * unsigned portNumber = 0
+
+Line:
+ * std::string name
+ * Connection inputs
+ * Connection output
+
+Conection:
+ * unsigned SID = 0
+ * unsigned port = 0

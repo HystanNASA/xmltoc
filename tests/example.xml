@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<System>
+  <Block BlockType="Inport" Name="setpoint" SID="16">
+    <P Name="Position">[-20, 403, 10, 417]</P>
+    <Port>
+      <P Name="PortNumber">1</P>
+      <P Name="Name">setpoint</P>
+    </Port>
+  </Block>
+  <Block BlockType="Inport" Name="feedback" SID="18">
+    <P Name="Position">[-20, 453, 10, 467]</P>
+    <P Name="Port">2</P>
+    <Port>
+      <P Name="PortNumber">1</P>
+      <P Name="Name">feedback</P>
+    </Port>
+  </Block>
+  <Block BlockType="Sum" Name="Add1" SID="17">
+    <P Name="Ports">[2, 1]</P>
+    <P Name="Position">[105, 402, 135, 433]</P>
+    <P Name="IconShape">rectangular</P>
+    <P Name="Inputs">+-</P>
+  </Block>
+  <Block BlockType="Sum" Name="Add2" SID="22">
+    <P Name="Ports">[2, 1]</P>
+    <P Name="Position">[340, 507, 370, 538]</P>
+    <P Name="IconShape">rectangular</P>
+  </Block>
+  <Block BlockType="Sum" Name="Add3" SID="23">
+    <P Name="Ports">[2, 1]</P>
+    <P Name="Position">[430, 412, 460, 443]</P>
+    <P Name="IconShape">rectangular</P>
+    <Port>
+      <P Name="PortNumber">1</P>
+      <P Name="Name">command</P>
+    </Port>
+  </Block>
+  <Block BlockType="Gain" Name="I_gain" SID="25">
+    <P Name="Position">[210, 500, 240, 530]</P>
+    <P Name="Gain">2</P>
+  </Block>
+  <Block BlockType="Gain" Name="P_gain" SID="19">
+    <P Name="Position">[305, 405, 335, 435]</P>
+    <P Name="Gain">3</P>
+  </Block>
+  <Block BlockType="Gain" Name="Ts" SID="26">
+    <P Name="Position">[270, 500, 310, 530]</P>
+    <P Name="Gain">0.01</P>
+  </Block>
+  <Block BlockType="UnitDelay" Name="Unit Delay1" SID="21">
+    <P Name="Position">[350, 573, 385, 607]</P>
+    <P Name="SampleTime">-1</P>
+  </Block>
+  <Block BlockType="Outport" Name="command" SID="20">
+    <P Name="Position">[565, 423, 595, 437]</P>
+  </Block>
+
+<Line>
+  <P Name="Name">setpoint</P>
+  <P Name="Src">16#out:1</P>
+  <P Name="Dst">17#in:1</P>
+</Line>
+<Line>
+  <P Name="Name">feedback</P>
+  <P Name="Src">18#out:1</P>
+  <P Name="Points">[43, 0; 0, -35]</P>
+  <P Name="Dst">17#in:2</P>
+</Line>
+<Line>
+  <P Name="Src">17#out:1</P>
+  <P Name="Points">[51, 0]</P>
+  <Branch>
+    <P Name="Points">[0, 95]</P>
+    <P Name="Dst">25#in:1</P>
+  </Branch>
+  <Branch>
+    <P Name="Dst">19#in:1</P>
+  </Branch>
+</Line>
+<Line>
+  <P Name="Src">21#out:1</P>
+  <P Name="Points">[-31, 0; 0, -60]</P>
+  <P Name="Dst">22#in:2</P>
+</Line>
+<Line>
+  <P Name="Src">22#out:1</P>
+  <P Name="Points">[34, 0]</P>
+  <Branch>
+    <P Name="Points">[0, 65]</P>
+    <P Name="Dst">21#in:1</P>
+  </Branch>
+  <Branch>
+    <P Name="Points">[0, -90]</P>
+    <P Name="Dst">23#in:2</P>
+  </Branch>
+</Line>
+<Line>
+  <P Name="Src">19#out:1</P>
+  <P Name="Dst">23#in:1</P>
+</Line>
+<Line>
+  <P Name="Name">command</P>
+  <P Name="Src">23#out:1</P>
+  <P Name="Dst">20#in:1</P>
+</Line>
+<Line>
+  <P Name="Src">25#out:1</P>
+  <P Name="Dst">26#in:1</P>
+</Line>
+<Line>
+  <P Name="Src">26#out:1</P>
+  <P Name="Dst">22#in:1</P>
+</Line>
+</System>
